@@ -36,6 +36,10 @@ import CardBoxComponentEmpty from "@/components/CardBoxComponentEmpty.vue";
       <CardBox class="mb-6" has-table>
         <TableSampleClients checkable />
       </CardBox>
+      
+      <CardBox class="mb-6" has-table>
+        <TableSampleClients checkable />
+      </CardBox>
 
       <SectionTitleLineWithButton :icon="mdiTableOff" title="Empty variation" />
 

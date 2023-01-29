@@ -1,17 +1,15 @@
 import axios from "axios";
+import clientAPI from './clientAPI';
 
 export class IngredientService {
     async fetchCategories() {
-        const response = await axios.get("api/category");
-        return response.data;
+        const data = await clientAPI.get('category');
+        return data
     }
 
     async createIngredient() {
-        const response = await fetch(`/api/user`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ data: "data" }),
-        });
-        return await response.json();
+        const data = { /* your data */ };
+        const response = await clientAPI.post('category', data);
+        console.log(response);
     }
 }
