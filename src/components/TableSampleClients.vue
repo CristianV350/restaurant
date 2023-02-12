@@ -1,75 +1,76 @@
 <script setup>
-import { computed, ref } from "vue";
-import { useMainStore } from "@/stores/main";
-import { mdiEye, mdiTrashCan } from "@mdi/js";
-import CardBoxModal from "@/components/CardBoxModal.vue";
-import TableCheckboxCell from "@/components/TableCheckboxCell.vue";
-import BaseLevel from "@/components/BaseLevel.vue";
-import BaseButtons from "@/components/BaseButtons.vue";
-import BaseButton from "@/components/BaseButton.vue";
-import UserAvatar from "@/components/UserAvatar.vue";
+import { computed, ref } from 'vue'
+import { useMainStore } from '@/stores/main'
+import { mdiEye, mdiTrashCan } from '@mdi/js'
+import CardBoxModal from '@/components/CardBoxModal.vue'
+import TableCheckboxCell from '@/components/TableCheckboxCell.vue'
+import BaseLevel from '@/components/BaseLevel.vue'
+import BaseButtons from '@/components/BaseButtons.vue'
+import BaseButton from '@/components/BaseButton.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
+import { useIngredientStore } from '@/stores/ingredients'
 
 defineProps({
-  checkable: Boolean,
-});
+    checkable: Boolean
+})
 
-const mainStore = useMainStore();
+const ingredientStore = useIngredientStore()
 
-const items = computed(() => mainStore.clients);
+const items = computed(() => ingredientStore.categories)
 
-const isModalActive = ref(false);
+const isModalActive = ref(false)
 
-const isModalDangerActive = ref(false);
+const isModalDangerActive = ref(false)
 
-const perPage = ref(5);
+const perPage = ref(5)
 
-const currentPage = ref(0);
+const currentPage = ref(0)
 
-const checkedRows = ref([]);
+const checkedRows = ref([])
 
 const itemsPaginated = computed(() =>
-  items.value.slice(
-    perPage.value * currentPage.value,
-    perPage.value * (currentPage.value + 1)
-  )
-);
+    items.value.slice(
+        perPage.value * currentPage.value,
+        perPage.value * (currentPage.value + 1)
+    )
+)
 
-const numPages = computed(() => Math.ceil(items.value.length / perPage.value));
+const numPages = computed(() => Math.ceil(items.value.length / perPage.value))
 
-const currentPageHuman = computed(() => currentPage.value + 1);
+const currentPageHuman = computed(() => currentPage.value + 1)
 
 const pagesList = computed(() => {
-  const pagesList = [];
+    const pagesList = []
 
-  for (let i = 0; i < numPages.value; i++) {
-    pagesList.push(i);
-  }
+    for (let i = 0; i < numPages.value; i++) {
+        pagesList.push(i)
+    }
 
-  return pagesList;
-});
+    return pagesList
+})
 
 const remove = (arr, cb) => {
-  const newArr = [];
+    const newArr = []
 
-  arr.forEach((item) => {
-    if (!cb(item)) {
-      newArr.push(item);
+    arr.forEach((item) => {
+        if (!cb(item)) {
+            newArr.push(item)
+        }
+    })
+
+    return newArr
+}
+
+const checked = (isChecked, category) => {
+    if (isChecked) {
+        checkedRows.value.push(category)
+    } else {
+        checkedRows.value = remove(
+            checkedRows.value,
+            (row) => row.id === category.id
+        )
     }
-  });
-
-  return newArr;
-};
-
-const checked = (isChecked, client) => {
-  if (isChecked) {
-    checkedRows.value.push(client);
-  } else {
-    checkedRows.value = remove(
-      checkedRows.value,
-      (row) => row.id === client.id
-    );
-  }
-};
+}
 </script>
 
 <template>
@@ -104,29 +105,28 @@ const checked = (isChecked, client) => {
         <th v-if="checkable" />
         <th />
         <th>Name</th>
-        <th>Company</th>
-        <th>City</th>
-        <th>Progress</th>
-        <th>Created</th>
         <th />
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in itemsPaginated" :key="client.id">
+      <tr
+        v-for="category in itemsPaginated"
+        :key="category.id"
+      >
         <TableCheckboxCell
           v-if="checkable"
-          @checked="checked($event, client)"
+          @checked="checked($event, category)"
         />
         <td class="border-b-0 lg:w-6 before:hidden">
           <UserAvatar
-            :username="client.name"
+            :username="category.name"
             class="w-24 h-24 mx-auto lg:w-6 lg:h-6"
           />
         </td>
         <td data-label="Name">
-          {{ client.name }}
+          {{ category.name }}
         </td>
-        <td data-label="Company">
+        <!-- <td data-label="Company">
           {{ client.company }}
         </td>
         <td data-label="City">
@@ -140,14 +140,14 @@ const checked = (isChecked, client) => {
           >
             {{ client.progress }}
           </progress>
-        </td>
-        <td data-label="Created" class="lg:w-1 whitespace-nowrap">
+        </td> -->
+        <!-- <td data-label="Created" class="lg:w-1 whitespace-nowrap">
           <small
             class="text-gray-500 dark:text-slate-400"
             :title="client.created"
             >{{ client.created }}</small
           >
-        </td>
+        </td> -->
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
             <BaseButton

@@ -1,14 +1,15 @@
 import ClientApi from "./ClientApi"
-export class IngredientService {
+
+export default {
     async fetchCategories() {
-        const response = await ClientApi("ingredients", "IngredientService").get("category")
+        const response = await ClientApi("IngredientService", "fetchCategories").get("category")
         // const response = await axios.get("api/category");
         return response.data;
-    }
+    },
 
     async createIngredient() {
         const data = { /* your data */ };
-        const response = await clientAPI.post('category', data);
+        const response = await ClientApi("IngredientService", "createIngredient").post('category', data);
         console.log(response);
     }
 }
