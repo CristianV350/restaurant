@@ -23,11 +23,11 @@ const routes = [
     },
     {
         meta: {
-            title: 'Categories'
+            title: 'Stock'
         },
-        path: '/checkpoints',
-        name: 'checkpoints',
-        component: () => import('@/views/IngredientView.vue')
+        path: '/stock',
+        name: 'stock',
+        component: () => import('@/views/StockView.vue')
     },
     {
         meta: {

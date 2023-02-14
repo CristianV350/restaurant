@@ -13,6 +13,10 @@ const emit = defineEmits(['check', 'uncheck'])
 
 defineProps({
     checkable: Boolean,
+    activeItem: {
+      type: Number,
+      default: null
+    },
     items: {
         type: Array,
         default: () => []
@@ -66,17 +70,8 @@ const remove = (arr, cb) => {
     return newArr
 }
 
-const checked = (isChecked, category) => {
-    if (isChecked) {
-        checkedRows.value.push(category)
-        emit('check', category.id)
-    } else {
-        checkedRows.value = remove(
-            checkedRows.value,
-            (row) => row.id === category.id
-        )
-        emit('check', null)
-    }
+const checked = (_, category) => {
+  emit('check', category.id)
 }
 </script>
 
@@ -98,11 +93,11 @@ const checked = (isChecked, category) => {
 
   <div v-if="checkedRows.length" class="p-3 bg-gray-100/50 dark:bg-slate-800">
     <span
-      v-for="checkedRow in checkedRows"
-      :key="checkedRow.id"
+      v-for="row in checkedRows"
+      :key="row.id"
       class="inline-block px-2 py-1 rounded-sm mr-2 text-sm bg-gray-100 dark:bg-slate-700"
     >
-      {{ checkedRow.name }}
+      {{ row.name }}
     </span>
   </div>
 
@@ -119,6 +114,8 @@ const checked = (isChecked, category) => {
       <tr
         v-for="category in itemsPaginated"
         :key="category.id"
+        :class="{'!bg-orange-500': activeItem == category.id}"
+        @click="checked($event, category)"
       >
         <TableCheckboxCell
           v-if="checkable"

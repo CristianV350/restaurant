@@ -37,8 +37,8 @@ ingredientStore.getByCategory()
 
       <CardBox class="mb-6" has-table>
         <Table
-          checkable
           :items="categories"
+          :activeItem="category"
           @check="categoryStore.setActiveCategory"
           @uncheck="categoryStore.setActiveCategory"
         />
@@ -46,6 +46,7 @@ ingredientStore.getByCategory()
 
       <CardBox class="mb-6" has-table>
         <Table
+          v-if="category"
           checkable
           :items="ingredients"
         />

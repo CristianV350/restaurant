@@ -25,11 +25,6 @@ export default [
         icon: mdiTable
     },
     {
-        to: '/categories',
-        label: 'Categories',
-        icon: mdiTable
-    },
-    {
         to: '/stock',
         label: 'Stock',
         icon: mdiTable

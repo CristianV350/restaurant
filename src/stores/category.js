@@ -35,7 +35,10 @@ export const useCategoryStore = defineStore('category', {
             await axios.post(`/api/category/${id}`)
         },
         async setActiveCategory(id) {
-            if (id === this.activeCategory) return
+            if (id === this.activeCategory) {
+                this.activeCategory = null
+                return
+            }
             this.activeCategory = id
             // await this.fetchIngredients()
         }
