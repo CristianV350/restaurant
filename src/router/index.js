@@ -1,8 +1,4 @@
-import {
-    createRouter,
-    createWebHashHistory,
-    createWebHistory
-} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Style from '@/views/StyleView.vue'
 import Home from '@/views/HomeView.vue'
 
@@ -27,11 +23,11 @@ const routes = [
     },
     {
         meta: {
-            title: 'Tables'
+            title: 'Categories'
         },
-        path: '/tables',
-        name: 'tables',
-        component: () => import('@/views/TablesView.vue')
+        path: '/checkpoints',
+        name: 'checkpoints',
+        component: () => import('@/views/IngredientView.vue')
     },
     {
         meta: {
@@ -39,7 +35,15 @@ const routes = [
         },
         path: '/checkpoints',
         name: 'checkpoints',
-        component: () => import('@/views/TablesView.vue')
+        component: () => import('@/views/CheckpointView.vue')
+    },
+    {
+        meta: {
+            title: 'Stock'
+        },
+        path: '/stock',
+        name: 'stock',
+        component: () => import('@/views/StockView.vue')
     },
     {
         meta: {

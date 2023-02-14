@@ -15,7 +15,7 @@ import LineChart from '@/components/Charts/LineChart.vue'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBoxWidget from '@/components/CardBoxWidget.vue'
 import CardBox from '@/components/CardBox.vue'
-import TableSampleClients from '@/components/TableSampleClients.vue'
+import TableClients from '@/components/Table.vue'
 import NotificationBar from '@/components/NotificationBar.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import CardBoxTransaction from '@/components/CardBoxTransaction.vue'
@@ -137,7 +137,7 @@ const transactionBarItems = computed(() => mainStore.history)
       </NotificationBar>
 
       <CardBox has-table>
-        <TableSampleClients />
+        <Table />
       </CardBox>
     </SectionMain>
   </LayoutAuthenticated>

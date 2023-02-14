@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import IngredientService from '../services/IngredientService'
+import IngredientService from '../services/CategoryService'
 
 const modelIngredient = {
     name: '',
@@ -15,11 +15,10 @@ const modelIngredient = {
 export const useIngredientStore = defineStore('ingredients', {
     state: () => ({
         activeCategory: null,
-        categories: [],
         ingredients: [{ ...modelIngredient }]
     }),
     actions: {
-        async fetchIngredients() {
+        async fetch() {
             if (!this.activeCategory) return []
             return await axios
                 .get('/api/ingredient/' + this.activeCategory)
@@ -33,6 +32,19 @@ export const useIngredientStore = defineStore('ingredients', {
                         }
                     })
                 })
+        },
+        async getByCategory(id) {
+            if (!id) return []
+            let result = await axios
+                .get('/api/ingredient/' + id)
+                .then((r) => r.data)
+            this.ingredients = result.map((item) => {
+                return {
+                    ...item,
+                    type: 'ingredient',
+                    created: true
+                }
+            })
         },
         async addIngredient(data) {
             await axios.post('/api/ingredient', data).then((r) => {

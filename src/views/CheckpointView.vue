@@ -13,33 +13,32 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
+import { useCheckpointStore } from '@/stores/checkpoint'
+import { computed } from '@vue/runtime-core'
+
+const checkpointStore = useCheckpointStore()
+const checkpoints = computed(() => checkpointStore.checkpoints)
+checkpointStore.fetch()
 </script>
 
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiTableBorder" title="Tables" main>
-        <BaseButton
-          href="https://github.com/justboil/admin-one-vue-tailwind"
-          target="_blank"
-          :icon="mdiGithub"
-          label="Star on GitHub"
-          color="contrast"
-          rounded-full
-          small
-        />
-      </SectionTitleLineWithButton>
+      <SectionTitleLineWithButton :icon="mdiTableBorder" title="Checkpoints" main />
       <NotificationBar color="info" :icon="mdiMonitorCellphone">
         <b>Responsive table.</b> Collapses on mobile
       </NotificationBar>
 
       <CardBox class="mb-6" has-table>
-        <Table checkable />
+        <Table
+          checkable
+          :items="checkpoints"
+        />
       </CardBox>
 
-      <CardBox class="mb-6" has-table>
+      <!-- <CardBox class="mb-6" has-table>
         <Table checkable />
-      </CardBox>
+      </CardBox> -->
 
       <SectionTitleLineWithButton :icon="mdiTableOff" title="Empty variation" />
 

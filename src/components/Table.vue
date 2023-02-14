@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { useMainStore } from '@/stores/main'
 import { mdiEye, mdiTrashCan } from '@mdi/js'
 import CardBoxModal from '@/components/CardBoxModal.vue'
 import TableCheckboxCell from '@/components/TableCheckboxCell.vue'
@@ -8,15 +7,21 @@ import BaseLevel from '@/components/BaseLevel.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
-import { useIngredientStore } from '@/stores/ingredients'
+import { useCategoryStore } from '@/stores/category'
+
+const emit = defineEmits(['check', 'uncheck'])
 
 defineProps({
-    checkable: Boolean
+    checkable: Boolean,
+    items: {
+        type: Array,
+        default: () => []
+    }
 })
 
-const ingredientStore = useIngredientStore()
+const categoryStore = useCategoryStore()
 
-const items = computed(() => ingredientStore.categories)
+const items = computed(() => categoryStore.categories)
 
 const isModalActive = ref(false)
 
@@ -64,11 +69,13 @@ const remove = (arr, cb) => {
 const checked = (isChecked, category) => {
     if (isChecked) {
         checkedRows.value.push(category)
+        emit('check', category.id)
     } else {
         checkedRows.value = remove(
             checkedRows.value,
             (row) => row.id === category.id
         )
+        emit('check', null)
     }
 }
 </script>

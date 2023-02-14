@@ -30,13 +30,8 @@ export default [
         icon: mdiTable
     },
     {
-        to: '/ingredients',
+        to: '/stock',
         label: 'Stock',
-        icon: mdiTable
-    },
-    {
-        to: '/checkpoints',
-        label: 'Checkpoints',
         icon: mdiTable
     },
     {
