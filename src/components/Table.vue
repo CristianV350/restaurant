@@ -106,7 +106,7 @@ const checked = (_, category) => {
       <tr>
         <th v-if="checkable" />
         <th />
-        <th>Name</th>
+        <th v-for="header in headers"></th>
         <th />
       </tr>
     </thead>
