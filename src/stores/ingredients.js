@@ -15,7 +15,7 @@ const modelIngredient = {
 export const useIngredientStore = defineStore('ingredients', {
     state: () => ({
         activeCategory: null,
-        ingredients: [{ ...modelIngredient }]
+        ingredients: []
     }),
     actions: {
         async fetch() {

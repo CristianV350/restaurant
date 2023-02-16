@@ -1,21 +1,24 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { mdiEye, mdiTrashCan } from '@mdi/js'
+import { computed, ref, toRefs } from 'vue'
+import { mdiEye, mdiTrashCan, mdiCreation } from '@mdi/js'
 import CardBoxModal from '@/components/CardBoxModal.vue'
 import TableCheckboxCell from '@/components/TableCheckboxCell.vue'
 import BaseLevel from '@/components/BaseLevel.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
-import { useCategoryStore } from '@/stores/category'
 
 const emit = defineEmits(['check', 'uncheck'])
 
-defineProps({
+const props = defineProps({
     checkable: Boolean,
     activeItem: {
       type: Number,
       default: null
+    },
+    headers: {
+      type: Array,
+      default: () => []
     },
     items: {
         type: Array,
@@ -23,9 +26,7 @@ defineProps({
     }
 })
 
-const categoryStore = useCategoryStore()
-
-const items = computed(() => categoryStore.categories)
+const { checkable, activeItem, headers, items } = toRefs(props)
 
 const isModalActive = ref(false)
 
@@ -70,13 +71,20 @@ const remove = (arr, cb) => {
     return newArr
 }
 
-const checked = (_, category) => {
-  emit('check', category.id)
+const create = () => {
+
+}
+
+const checked = (_, item) => {
+  emit('check', item.id)
 }
 </script>
 
 <template>
-  <CardBoxModal v-model="isModalActive" title="Sample modal">
+  <CardBoxModal
+    v-model="isModalActive"
+    title="Sample modal"
+  >
     <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
     <p>This is sample modal</p>
   </CardBoxModal>
@@ -91,7 +99,10 @@ const checked = (_, category) => {
     <p>This is sample modal</p>
   </CardBoxModal>
 
-  <div v-if="checkedRows.length" class="p-3 bg-gray-100/50 dark:bg-slate-800">
+  <div
+    v-if="checkedRows.length"
+    class="p-3 bg-gray-100/50 dark:bg-slate-800"
+  >
     <span
       v-for="row in checkedRows"
       :key="row.id"
@@ -106,29 +117,54 @@ const checked = (_, category) => {
       <tr>
         <th v-if="checkable" />
         <th />
-        <th v-for="header in headers"></th>
+        <th
+          v-for="header in headers"
+          :key="header.id"
+        >
+          {{ header.name }}
+        </th>
         <th />
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="category in itemsPaginated"
-        :key="category.id"
-        :class="{'!bg-orange-500': activeItem == category.id}"
-        @click="checked($event, category)"
+        v-if="!itemsPaginated.length"
+        class="pb-2"
+      >
+        <BaseButtons
+          type="justify-start lg:justify-end"
+          no-wrap
+        >
+          <BaseButton
+            color="success"
+            :icon="mdiCreation"
+            small
+            @click="isModalActive = true"
+          />
+        </BaseButtons>
+      </tr>
+      <tr
+        v-for="item in itemsPaginated"
+        :key="item.id"
+        :class="{'!bg-orange-500': activeItem == item.id}"
+        @click="checked($event, item)"
       >
         <TableCheckboxCell
           v-if="checkable"
-          @checked="checked($event, category)"
+          @checked="checked($event, item)"
         />
-        <td class="border-b-0 lg:w-6 before:hidden">
+        <td
+          v-else
+          class="lg:w-6"
+        />
+        <!-- <td class="border-b-0 lg:w-6 before:hidden">
           <UserAvatar
-            :username="category.name"
+            :username="item.name"
             class="w-24 h-24 mx-auto lg:w-6 lg:h-6"
           />
-        </td>
-        <td data-label="Name">
-          {{ category.name }}
+        </td> -->
+        <td :data-label="item.key">
+          {{ item.name }}
         </td>
         <!-- <td data-label="Company">
           {{ client.company }}
@@ -153,7 +189,10 @@ const checked = (_, category) => {
           >
         </td> -->
         <td class="before:hidden lg:w-1 whitespace-nowrap">
-          <BaseButtons type="justify-start lg:justify-end" no-wrap>
+          <BaseButtons
+            type="justify-start lg:justify-end"
+            no-wrap
+          >
             <BaseButton
               color="info"
               :icon="mdiEye"

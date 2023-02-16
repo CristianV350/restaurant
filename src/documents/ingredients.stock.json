@@ -1,0 +1,32 @@
+[
+    {
+        "id": 3,
+        "name": "Name",
+        "key": "name"
+    },
+    {
+        "id": 4,
+        "name": "Category",
+        "key": "category"
+    },
+    {
+        "id": 5,
+        "name": "Price",
+        "key": "price"
+    },
+    {
+        "id": 6,
+        "name": "Purchase Price",
+        "key": "purchase_price"
+    },
+    {
+        "id": 7,
+        "name": "Measure",
+        "key": "measure"
+    },
+    {
+        "id": 8,
+        "name": "Quantity",
+        "key": "portions"
+    }
+]
