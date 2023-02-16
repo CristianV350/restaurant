@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, toRefs } from 'vue'
-import { mdiEye, mdiTrashCan, mdiCreation } from '@mdi/js'
+import { mdiEye, mdiTrashCan, mdiCreation, mdiPlus } from '@mdi/js'
 import CardBoxModal from '@/components/CardBoxModal.vue'
 import TableCheckboxCell from '@/components/TableCheckboxCell.vue'
 import BaseLevel from '@/components/BaseLevel.vue'
@@ -128,22 +128,6 @@ const checked = (_, item) => {
     </thead>
     <tbody>
       <tr
-        v-if="!itemsPaginated.length"
-        class="pb-2"
-      >
-        <BaseButtons
-          type="justify-start lg:justify-end"
-          no-wrap
-        >
-          <BaseButton
-            color="success"
-            :icon="mdiCreation"
-            small
-            @click="isModalActive = true"
-          />
-        </BaseButtons>
-      </tr>
-      <tr
         v-for="item in itemsPaginated"
         :key="item.id"
         :class="{'!bg-orange-500': activeItem == item.id}"
@@ -210,7 +194,26 @@ const checked = (_, item) => {
       </tr>
     </tbody>
   </table>
-  <div class="p-3 lg:px-6 border-t border-gray-100 dark:border-slate-800">
+  <CardBox
+    v-if="!itemsPaginated.length"
+  >
+    <BaseButtons
+      class="h-32"
+      type="justify-center lg:justify-center"
+      no-wrap
+    >
+      <BaseButton
+        color="success"
+        :icon="mdiPlus"
+        small
+        @click="isModalActive = true"
+      />
+    </BaseButtons>
+  </CardBox>
+  <div
+    v-if="numPages > 1"
+    class="p-3 lg:px-6 border-t border-gray-100 dark:border-slate-800"
+  >
     <BaseLevel>
       <BaseButtons>
         <BaseButton
