@@ -2,6 +2,9 @@ import { defineStore } from "pinia";
 
 export const useMainStore = defineStore("main", {
   state: () => ({
+    /* Mode */
+    mode: "edit", // edit, preview, split
+
     /* User */
     userName: null,
     userEmail: null,
@@ -25,5 +28,8 @@ export const useMainStore = defineStore("main", {
         this.userAvatar = payload.avatar;
       }
     },
+    setMode(value) {
+      this.mode = value
+    }
   },
 });

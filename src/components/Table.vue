@@ -1,12 +1,26 @@
 <script setup>
 import { computed, ref, toRefs } from 'vue'
-import { mdiEye, mdiTrashCan, mdiCreation, mdiPlus } from '@mdi/js'
+import { mdiEye, mdiTrashCan, mdiPlus } from '@mdi/js'
 import CardBoxModal from '@/components/CardBoxModal.vue'
 import TableCheckboxCell from '@/components/TableCheckboxCell.vue'
 import BaseLevel from '@/components/BaseLevel.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
+import SectionMain from '@/components/SectionMain.vue'
+import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
+import { mdiBallotOutline, mdiAccount, mdiMail, mdiGithub } from "@mdi/js";
+import CardBox from "@/components/CardBox.vue";
+import FormCheckRadioGroup from "@/components/FormCheckRadioGroup.vue";
+import FormFilePicker from "@/components/FormFilePicker.vue";
+import FormField from "@/components/FormField.vue";
+import FormControl from "@/components/FormControl.vue";
+import BaseDivider from "@/components/BaseDivider.vue";
+import SectionTitle from "@/components/SectionTitle.vue";
+import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
+import NotificationBarInCard from "@/components/NotificationBarInCard.vue";
+
+import { useMainStore } from '@/stores/main'
+import { EventBus } from '@/services/event'
 
 const emit = defineEmits(['check', 'uncheck'])
 
@@ -15,6 +29,10 @@ const props = defineProps({
     activeItem: {
       type: Number,
       default: null
+    },
+    actions: {
+      type: Array,
+      default: () => ["save", "cancel"]
     },
     headers: {
       type: Array,
@@ -26,7 +44,11 @@ const props = defineProps({
     }
 })
 
-const { checkable, activeItem, headers, items } = toRefs(props)
+const { checkable, activeItem, headers, items, actions } = toRefs(props)
+
+const mainStore = useMainStore()
+const mode = computed(() => mainStore.mode)
+const setMode = (mode) => mainStore.setMode(mode)
 
 const isModalActive = ref(false)
 
@@ -38,12 +60,15 @@ const currentPage = ref(0)
 
 const checkedRows = ref([])
 
-const itemsPaginated = computed(() =>
-    items.value.slice(
-        perPage.value * currentPage.value,
-        perPage.value * (currentPage.value + 1)
-    )
-)
+const rows = ref({ ...items.value })
+
+const itemsPaginated = computed(() => {
+  if (!rows.value.length) return []
+  return rows.value.slice(
+      perPage.value * currentPage.value,
+      perPage.value * (currentPage.value + 1)
+  )
+})
 
 const numPages = computed(() => Math.ceil(items.value.length / perPage.value))
 
@@ -75,6 +100,10 @@ const create = () => {
 
 }
 
+EventBus.on(`command-save`, () => {
+  console.log('command-save')
+})
+
 const checked = (_, item) => {
   emit('check', item.id)
 }
@@ -83,16 +112,20 @@ const checked = (_, item) => {
 <template>
   <CardBoxModal
     v-model="isModalActive"
-    title="Sample modal"
+    :v-bind="$attrs"
+    :actions="actions"
+    title="Adauga"
   >
-    <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-    <p>This is sample modal</p>
+    <slot name="modal">
+
+    </slot>
   </CardBoxModal>
 
   <CardBoxModal
     v-model="isModalDangerActive"
     title="Please confirm"
     button="danger"
+    :actions="['delete']"
     has-cancel
   >
     <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>

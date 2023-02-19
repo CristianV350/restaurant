@@ -6,10 +6,15 @@ import BaseButtons from "@/components/BaseButtons.vue";
 import CardBox from "@/components/CardBox.vue";
 import OverlayLayer from "@/components/OverlayLayer.vue";
 import CardBoxComponentTitle from "@/components/CardBoxComponentTitle.vue";
+import { EventBus } from "@/services/event";
 
 const props = defineProps({
   title: {
     type: String,
+    required: true,
+  },
+  actions :{
+    type: Array,
     required: true,
   },
   button: {
@@ -20,6 +25,10 @@ const props = defineProps({
     type: String,
     default: "Done",
   },
+  buttonAction: {
+    type: String,
+    default: "back",
+  },
   hasCancel: Boolean,
   modelValue: {
     type: [String, Number, Boolean],
@@ -27,7 +36,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:modelValue", "cancel", "confirm"]);
+const emit = defineEmits(["update:modelValue", "command-cancel", "command-confirm", "command-save", "command-back"]);
 
 const value = computed({
   get: () => props.modelValue,
@@ -39,9 +48,11 @@ const confirmCancel = (mode) => {
   emit(mode);
 };
 
-const confirm = () => confirmCancel("confirm");
+const emitEvent = (action) => {
+  EventBus.emit(`command-${action}`)
+}
 
-const cancel = () => confirmCancel("cancel");
+const cancel = () => confirmCancel("command-cancel");
 
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && value.value) {
@@ -74,13 +85,12 @@ window.addEventListener("keydown", (e) => {
 
       <template #footer>
         <BaseButtons>
-          <BaseButton :label="buttonLabel" :color="button" @click="confirm" />
           <BaseButton
-            v-if="hasCancel"
-            label="Cancel"
-            :color="button"
-            outline
-            @click="cancel"
+            v-for="action in actions"
+            :key="action"
+            :label="action.toUpperCase()"
+            :color="action"
+            @click="emitEvent(action)"
           />
         </BaseButtons>
       </template>

@@ -15,10 +15,17 @@ import BaseButton from '@/components/BaseButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import { computed } from 'vue'
 import { useCategoryStore } from '@/stores/category'
+import { useCheckpointStore } from '@/stores/checkpoint'
 import { useIngredientStore } from '@/stores/ingredients'
 
 import catHeaders from '@/documents/categories.stock.json'
 import ingHeaders from '@/documents/ingredients.stock.json'
+import checkHeaders from '@/documents/checkpoints.json'
+
+const checkpointStore = useCheckpointStore()
+const checkpoints = computed(() => checkpointStore.checkpoints)
+const checkpoint = computed(() => checkpointStore.activeCheckpoint)
+checkpointStore.fetch()
 
 const categoryStore = useCategoryStore()
 const categories = computed(() => categoryStore.categories)
@@ -45,11 +52,11 @@ ingredientStore.getByCategory()
       >
         <div>
           <Table
-            :headers="catHeaders"
-            :items="categories"
-            :active-item="category"
-            @check="categoryStore.setActiveCategory"
-            @uncheck="categoryStore.setActiveCategory"
+            :headers="checkHeaders"
+            :items="checkpoints"
+            :active-item="checkpoint"
+            @check="checkpointStore.setActiveCheckpoint"
+            @uncheck="checkpointStore.setActiveCheckpoint"
           />
         </div>
       </CardBox>
