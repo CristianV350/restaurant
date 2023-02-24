@@ -60,11 +60,9 @@ const currentPage = ref(0)
 
 const checkedRows = ref([])
 
-const rows = ref({ ...items.value })
-
 const itemsPaginated = computed(() => {
-  if (!rows.value.length) return []
-  return rows.value.slice(
+  if (!items.value.length) return []
+  return items.value.slice(
       perPage.value * currentPage.value,
       perPage.value * (currentPage.value + 1)
   )
@@ -99,10 +97,6 @@ const remove = (arr, cb) => {
 const create = () => {
 
 }
-
-EventBus.on(`command-save`, () => {
-  console.log('command-save')
-})
 
 const checked = (_, item) => {
   emit('check', item.id)
@@ -156,7 +150,7 @@ const checked = (_, item) => {
         >
           {{ header.name }}
         </th>
-        <th />
+        <th width="150"/>
       </tr>
     </thead>
     <tbody>
@@ -180,16 +174,16 @@ const checked = (_, item) => {
             class="w-24 h-24 mx-auto lg:w-6 lg:h-6"
           />
         </td> -->
-        <td :data-label="item.key">
+        <td v-if="item.name" data-label="Name">
           {{ item.name }}
         </td>
-        <!-- <td data-label="Company">
-          {{ client.company }}
+        <td v-if="item.address" data-label="Address">
+          {{ item.address }}
         </td>
-        <td data-label="City">
-          {{ client.city }}
+        <td v-if="item.price" data-label="Price">
+          {{ item.price }}
         </td>
-        <td data-label="Progress" class="lg:w-32">
+        <!-- <td data-label="Progress" class="lg:w-32">
           <progress
             class="flex w-2/5 self-center lg:w-full"
             max="100"
@@ -207,7 +201,7 @@ const checked = (_, item) => {
         </td> -->
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons
-            type="justify-start lg:justify-end"
+            type="justify-center lg:justify-center"
             no-wrap
           >
             <BaseButton
@@ -227,9 +221,7 @@ const checked = (_, item) => {
       </tr>
     </tbody>
   </table>
-  <CardBox
-    v-if="!itemsPaginated.length"
-  >
+  <CardBox>
     <BaseButtons
       class="h-32"
       type="justify-center lg:justify-center"

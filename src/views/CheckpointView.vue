@@ -28,17 +28,24 @@ import { computed, ref, reactive } from '@vue/runtime-core'
 
 import checkHeaders from '@/documents/checkpoints.json'
 import { EventBus } from '@/services/event'
+import CheckpointService from '@/services/CheckpointService'
 
 const checkpointStore = useCheckpointStore()
 const checkpoints = computed(() => checkpointStore.checkpoints)
 checkpointStore.fetch()
 
-const form = reactive({
-    name: 'John Doe',
+let form = ref({
+    name: '',
     address: '',
 })
-EventBus.on(`command-save`, () => {
-    console.log('save')
+
+EventBus.on(`command-create`, async () => {
+    let checkpoint = await CheckpointService.save(form.value)
+    await checkpointStore.add(checkpoint)
+    form.value = {
+      name: '',
+      address: '',
+    }
 })
 </script>
 
@@ -49,7 +56,6 @@ EventBus.on(`command-save`, () => {
 
       <CardBox class="mb-6" has-table>
         <Table
-          checkable
           :headers="checkHeaders"
           :items="checkpoints"
           :actions="['create', 'cancel']"

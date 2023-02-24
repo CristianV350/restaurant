@@ -49,7 +49,9 @@ const confirmCancel = (mode) => {
 };
 
 const emitEvent = (action) => {
+  console.log('emitEvent', `command-${action}`)
   EventBus.emit(`command-${action}`)
+  value.value = false
 }
 
 const cancel = () => confirmCancel("command-cancel");

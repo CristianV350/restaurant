@@ -10,22 +10,18 @@ export const useCheckpointStore = defineStore('checkpoint', {
     actions: {
         async fetch() {
             let result = await CheckpointService.fetch()
-            if (result.length && !this.activeCheckpoint)
-                this.setActiveCheckpoint(result[0].id)
+            if (result.error) return
+            if (result.length && !this.activeCheckpoint) this.setActiveCheckpoint(result[0].id)
             // await this.fetchIngredients()
             this.checkpoints = result
         },
-        async add(data) {
-            await axios.post('/api/checkpoint', data).then((r) => {
-                let checkpoint = r.data
-
-                let exists = this.checkpoints.find(
-                    (i) => i.name === checkpoint.name
-                )
-                if (!exists) {
-                    this.checkpoints.push({ ...checkpoint })
-                }
-            })
+        async add(checkpoint) {
+            let exists = this.checkpoints.find(
+                (i) => i.name === checkpoint.name
+            )
+            if (!exists) {
+                this.checkpoints.push({ ...checkpoint })
+            }
         },
         async update({ id, data }) {
             await axios.patch(`/api/checkpoint/${id}`, data)
