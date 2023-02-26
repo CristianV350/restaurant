@@ -75,35 +75,5 @@ export const useIngredientStore = defineStore('ingredients', {
         async deleteIngredient({ id }) {
             await axios.delete(`/api/ingredient/${id}`)
         },
-        async fetchCategories() {
-            let result = await IngredientService.fetchCategories()
-            if (result.length && !this.activeCategory)
-                this.setActiveCategory(result[0].id)
-            // await this.fetchIngredients()
-            this.categories = result
-        },
-        async addCategory(data) {
-            await axios.post('/api/category', data).then((r) => {
-                let category = r.data
-
-                let exists = this.categories.find(
-                    (i) => i.name === category.name
-                )
-                if (!exists) {
-                    this.categories.push({ ...category })
-                }
-            })
-        },
-        async updateCategory({ id, data }) {
-            await axios.patch(`/api/category/${id}`, data)
-        },
-        async deleteCategory(id) {
-            await axios.post(`/api/category/${id}`)
-        },
-        async setActiveCategory(id) {
-            if (id === this.activeCategory) return
-            this.activeCategory = id
-            // await this.fetchIngredients()
-        }
     }
 })
